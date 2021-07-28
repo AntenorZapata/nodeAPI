@@ -4,8 +4,6 @@ const morgan = require('morgan');
 const guitarRouter = require('./routes/guitarRoutes');
 const userRouter = require('./routes/userRoutes');
 
-// MIDDLEWARES
-
 const app = express();
 app.use(express.json()); // use middleware
 
