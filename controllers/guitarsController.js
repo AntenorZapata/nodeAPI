@@ -1,4 +1,5 @@
 const fs = require('fs');
+
 const guitars = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/guitars-simple.json`)
 );
@@ -46,13 +47,14 @@ const getGuitar = (req, res) => {
 
 const createGuitar = (req, res) => {
   const newId = guitars[guitars.length - 1].id + 1;
-  const newGuitar = Object.assign({ id: newId }, req.body);
+  // const newGuitar = Object.assign({ id: newId }, req.body);
+  const newGuitar = { ...req.body, id: newId };
   guitars.push(newGuitar);
 
   fs.writeFile(
     `${__dirname}/../dev-data/data/guitars-simple.json`,
     JSON.stringify(guitars),
-    (err) => {
+    () => {
       res.status(201).json({
         status: 'succees',
         data: {
