@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const guitarsController = require('../controllers/guitarsController');
 
-router.param('id', guitarsController.checkID);
+router.param('id', guitarsController.checkID); // middleware
 // router.param('body', guitarsController.checkBody);
 
 router
