@@ -1,32 +1,6 @@
 // const fs = require('fs');
 const Guitar = require('../models/guitarModel');
 
-// const guitars = JSON.parse(
-//   fs.readFileSync(`${__dirname}/../dev-data/data/guitars-simple.json`)
-// );
-
-// const checkID = (req, res, next, value) => {
-//   if (+req.params.id > guitars.length) {
-//     return res.status(404).json({
-//       status: 'fail',
-//       message: 'Invalid ID',
-//     });
-//   }
-//   next();
-// };
-
-// const checkBody = (req, res, next) => {
-//   if (!req.body.name) {
-//     return res.status(404).json({
-//       status: 'fail',
-//       message: 'no body',
-//     });
-//   }
-//   next();
-// };
-
-//Middlewares FIlters
-
 const aliasTopGuitars = (req, res, next) => {
   req.query.limit = '5';
   req.query.sort = '-ratingsAverage, price';
