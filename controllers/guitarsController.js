@@ -27,16 +27,25 @@ const Guitar = require('../models/guitarModel');
 
 const getAllGuitars = async (req, res) => {
   try {
+    // 1A) Filtering
     const queryObj = { ...req.query };
     const excludeFields = ['page', 'sort', 'limit', 'fields'];
     excludeFields.forEach((el) => delete queryObj[el]);
 
+    // 1B) Advanced FIltering
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
-    console.log(JSON.parse(queryStr));
+    let query = Guitar.find(JSON.parse(queryStr));
 
-    const query = Guitar.find(JSON.parse(queryStr));
+    //2) Sorting
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort('-createdAt');
+    }
+
     const allGuitars = await query;
 
     res.status(200).json({
