@@ -25,6 +25,23 @@ const Guitar = require('../models/guitarModel');
 //   next();
 // };
 
+//Middlewares FIlters
+
+const aliasTopGuitars = (req, res, next) => {
+  req.query.limit = '5';
+  req.query.sort = '-ratingsAverage, price';
+  req.query.fields = 'model, price, ratingsAverage, summary';
+  next();
+};
+
+const aliasTopFender = (req, res, next) => {
+  req.query.limit = '5';
+  req.query.model = 'fender';
+  req.query.sort = 'price';
+  req.query.fields = 'model, price';
+  next();
+};
+
 const getAllGuitars = async (req, res) => {
   try {
     // 1A) Filtering
@@ -59,6 +76,11 @@ const getAllGuitars = async (req, res) => {
     const limit = +req.query.limit || 100;
     const skip = (page - 1) * limit;
     query = query.skip(skip).limit(limit);
+
+    if (req.query.page) {
+      const numGuitars = await Guitar.countDocuments();
+      if (skip >= numGuitars) throw new Error('This page does not exist');
+    }
 
     const allGuitars = await query;
 
@@ -157,6 +179,8 @@ module.exports = {
   upDateGuitar,
   createGuitar,
   deleteGuitar,
+  aliasTopGuitars,
+  aliasTopFender,
   // checkID,
   // checkBody,
 };

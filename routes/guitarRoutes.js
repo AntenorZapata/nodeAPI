@@ -7,6 +7,14 @@ const guitarsController = require('../controllers/guitarsController');
 // router.param('body', guitarsController.checkBody);
 
 router
+  .route('/top-5-cheap')
+  .get(guitarsController.aliasTopGuitars, guitarsController.getAllGuitars);
+
+router
+  .route('/top-5-fender')
+  .get(guitarsController.aliasTopFender, guitarsController.getAllGuitars);
+
+router
   .route('/')
   .get(guitarsController.getAllGuitars)
   .post(guitarsController.createGuitar);
