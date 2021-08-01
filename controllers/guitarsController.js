@@ -46,8 +46,6 @@ const getAllGuitars = async (req, res) => {
 };
 
 const getGuitar = async (req, res) => {
-  // const guitar = guitars.find((item) => item.id === +req.params.id);
-
   try {
     const guitar = await Guitar.findById(req.params.id);
 
