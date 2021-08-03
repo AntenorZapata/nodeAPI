@@ -9,6 +9,7 @@ const guitarSchema = new mongoose.Schema({
   model: {
     type: String,
     required: [true, 'A guitar must have a model'],
+    maxlength: [40, 'A guitar model must have less or equal 40 characters'],
   },
   year: {
     type: Number,
@@ -17,6 +18,8 @@ const guitarSchema = new mongoose.Schema({
   ratingsAvarage: {
     type: Number,
     default: 4.5,
+    min: [1, 'rating must be above 1.0'],
+    max: [5, 'rating must be bellow 5.0'],
   },
   ratingsQuantity: {
     type: Number,
