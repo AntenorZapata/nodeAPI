@@ -49,6 +49,13 @@ const guitarSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'A guitar must have a price'],
   },
+  priceDiscount: {
+    type: Number,
+    validate: function (val) {
+      return val < this.price;
+    },
+    message: 'Discount price ({VALUE}) should be bellow regular price',
+  },
   imageCover: {
     type: String,
     required: [true, 'A guitar must have a image'],
