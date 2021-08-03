@@ -133,6 +133,11 @@ const getGuitarStats = async (req, res) => {
           maxPrice: { $max: '$price' },
         },
       },
+      {
+        $sort: {
+          avgPrice: 1,
+        },
+      },
     ]);
 
     res.status(200).json({
@@ -158,6 +163,7 @@ module.exports = {
   aliasTopGuitars,
   aliasTopFender,
   getGuitarStats,
+  // getMonthlyPlan,
   // checkID,
   // checkBody,
 };

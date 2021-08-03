@@ -7,6 +7,7 @@ const guitarsController = require('../controllers/guitarsController');
 // router.param('body', guitarsController.checkBody);
 
 router.route('/guitar-stats').get(guitarsController.getGuitarStats);
+// router.route('/monthly-plan/:year').get(guitarsController.getMonthlyPlan);
 
 router
   .route('/top-5-cheap')

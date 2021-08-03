@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugfy = require('slugify');
 
 const guitarSchema = new mongoose.Schema({
   brand: {
@@ -58,23 +59,15 @@ const guitarSchema = new mongoose.Schema({
     type: String,
     required: [true, 'A guitar must have a link'],
   },
+  slug: String,
+});
+
+// DOCUMENT MIDDLEWARE
+guitarSchema.pre('save', function (next) {
+  this.slug = slugfy(this.name, { lower: true });
+  next();
 });
 
 const Guitar = mongoose.model('Guitar', guitarSchema);
-
-// const testGuitar = new Guitar({
-//   name: 'Tonante',
-//   rating: 4.7,
-//   price: 800,
-// });
-
-// testGuitar
-//   .save()
-//   .then((doc) => {
-//     console.log(doc);
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
 
 module.exports = Guitar;
