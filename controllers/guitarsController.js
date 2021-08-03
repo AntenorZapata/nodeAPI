@@ -116,6 +116,39 @@ const deleteGuitar = async (req, res) => {
   }
 };
 
+const getGuitarStats = async (req, res) => {
+  try {
+    const stats = await Guitar.aggregate([
+      {
+        $match: { ratingsAvarage: { $gte: 4.5 } },
+      },
+      {
+        $group: {
+          _id: null,
+          numGuitars: { $sum: 1 },
+          numRatings: { $sum: '$ratingsQuantity' },
+          avgRating: { $avg: '$ratingsAvarage' },
+          avgPrice: { $avg: '$price' },
+          minPrice: { $min: '$price' },
+          maxPrice: { $max: '$price' },
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        stats,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      data: err,
+    });
+  }
+};
+
 module.exports = {
   getAllGuitars,
   getGuitar,
@@ -124,6 +157,7 @@ module.exports = {
   deleteGuitar,
   aliasTopGuitars,
   aliasTopFender,
+  getGuitarStats,
   // checkID,
   // checkBody,
 };

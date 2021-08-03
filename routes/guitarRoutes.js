@@ -6,6 +6,8 @@ const guitarsController = require('../controllers/guitarsController');
 // router.param('id', guitarsController.checkID); // middleware
 // router.param('body', guitarsController.checkBody);
 
+router.route('/guitar-stats').get(guitarsController.getGuitarStats);
+
 router
   .route('/top-5-cheap')
   .get(guitarsController.aliasTopGuitars, guitarsController.getAllGuitars);
