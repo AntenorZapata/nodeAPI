@@ -1,6 +1,8 @@
 // const fs = require('fs');
 const Guitar = require('../models/guitarModel');
 const APIFeatures = require('../utils/apiFeatures');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
 const aliasTopGuitars = (req, res, next) => {
   req.query.limit = '5';
@@ -17,142 +19,112 @@ const aliasTopFender = (req, res, next) => {
   next();
 };
 
-const getAllGuitars = async (req, res) => {
-  try {
-    const features = new APIFeatures(Guitar.find(), req.query)
-      .filter()
-      .sort()
-      .limitField()
-      .paginate();
+const getAllGuitars = catchAsync(async (req, res, next) => {
+  const features = new APIFeatures(Guitar.find(), req.query)
+    .filter()
+    .sort()
+    .limitField()
+    .paginate();
 
-    const allGuitars = await features.query;
+  const allGuitars = await features.query;
 
-    res.status(200).json({
-      requestAt: req.requestTime,
-      status: 'success',
-      results: allGuitars.length,
-      data: {
-        allGuitars,
-      },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      data: err,
-    });
+  res.status(200).json({
+    requestAt: req.requestTime,
+    status: 'success',
+    results: allGuitars.length,
+    data: {
+      allGuitars,
+    },
+  });
+});
+
+const getGuitar = catchAsync(async (req, res, next) => {
+  const guitar = await Guitar.findById(req.params.id);
+
+  if (!guitar) {
+    return next(new AppError('No guitar found with that ID', 404));
   }
-};
 
-const getGuitar = async (req, res) => {
-  try {
-    const guitar = await Guitar.findById(req.params.id);
+  res.status(200).json({
+    status: 'success',
+    data: {
+      guitar,
+    },
+  });
+});
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        guitar,
-      },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      data: err,
-    });
+const createGuitar = catchAsync(async (req, res, next) => {
+  const newGuitar = await Guitar.create(req.body);
+
+  res.status(200).json({
+    status: 'succees',
+    data: {
+      guitar: newGuitar,
+    },
+  });
+});
+
+const upDateGuitar = catchAsync(async (req, res, next) => {
+  const guitar = await Guitar.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!guitar) {
+    return next(new AppError('No guitar found with that ID', 404));
   }
-};
 
-const createGuitar = async (req, res) => {
-  try {
-    const newGuitar = await Guitar.create(req.body);
+  res.status(200).json({
+    status: 'success',
+    data: {
+      guitar,
+    },
+  });
+});
 
-    res.status(200).json({
-      status: 'succees',
-      data: {
-        guitar: newGuitar,
-      },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      data: err,
-    });
+const deleteGuitar = catchAsync(async (req, res, next) => {
+  const guitar = await Guitar.findByIdAndDelete(req.params.id);
+
+  if (!guitar) {
+    return next(new AppError('No guitar found with that ID', 404));
   }
-};
 
-const upDateGuitar = async (req, res) => {
-  try {
-    const guitar = await Guitar.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        guitar,
+const getGuitarStats = catchAsync(async (req, res, next) => {
+  const stats = await Guitar.aggregate([
+    {
+      $match: { ratingsAvarage: { $gte: 4.5 } },
+    },
+    {
+      $group: {
+        _id: null,
+        numGuitars: { $sum: 1 },
+        numRatings: { $sum: '$ratingsQuantity' },
+        avgRating: { $avg: '$ratingsAvarage' },
+        avgPrice: { $avg: '$price' },
+        minPrice: { $min: '$price' },
+        maxPrice: { $max: '$price' },
       },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      data: err,
-    });
-  }
-};
-
-const deleteGuitar = async (req, res) => {
-  try {
-    await Guitar.findByIdAndDelete(req.params.id);
-
-    res.status(204).json({
-      status: 'success',
-      data: null,
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      data: err,
-    });
-  }
-};
-
-const getGuitarStats = async (req, res) => {
-  try {
-    const stats = await Guitar.aggregate([
-      {
-        $match: { ratingsAvarage: { $gte: 4.5 } },
+    },
+    {
+      $sort: {
+        avgPrice: 1,
       },
-      {
-        $group: {
-          _id: null,
-          numGuitars: { $sum: 1 },
-          numRatings: { $sum: '$ratingsQuantity' },
-          avgRating: { $avg: '$ratingsAvarage' },
-          avgPrice: { $avg: '$price' },
-          minPrice: { $min: '$price' },
-          maxPrice: { $max: '$price' },
-        },
-      },
-      {
-        $sort: {
-          avgPrice: 1,
-        },
-      },
-    ]);
+    },
+  ]);
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        stats,
-      },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      data: err,
-    });
-  }
-};
+  res.status(200).json({
+    status: 'success',
+    data: {
+      stats,
+    },
+  });
+});
 
 module.exports = {
   getAllGuitars,
