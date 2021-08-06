@@ -72,7 +72,6 @@ const guitarSchema = new mongoose.Schema({
   slug: String,
 });
 
-// DOCUMENT MIDDLEWARE
 guitarSchema.pre('save', function (next) {
   this.slug = slugfy(this.name, { lower: true });
   next();
