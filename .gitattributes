@@ -2,7 +2,7 @@
 # *.ts linguist-detectable=false
 # *.css linguist-detectable=false
 # *.scss linguist-detectable=false
-# *.html linguist-detectable=false
+*.html linguist-detectable=false
 # *.java linguist-detectable=false
 # *.js linguist-detectable=false
 # *.ts linguist-detectable=false
