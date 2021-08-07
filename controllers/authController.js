@@ -97,9 +97,23 @@ const restrictTo =
     next();
   };
 
+const forgotPassword = async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    return next(new AppError('There is no user with email address.', 404));
+  }
+
+  const resetToken = user.createPasswordResetToeken();
+  await user.save({ validateBeforeSave: false });
+};
+const resetPassword = (req, res, next) => {};
+
 module.exports = {
   signup,
   login,
   protect,
   restrictTo,
+  forgotPassword,
+  resetPassword,
 };
