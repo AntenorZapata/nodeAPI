@@ -62,6 +62,8 @@ const protect = catchAsync(async (req, res, next) => {
       new AppError('Your are not logged in! Please log in to get access!', 401)
     );
   }
+
+  jwt.verify(token, process.env.JWT_SECRET)
   next();
 });
 
