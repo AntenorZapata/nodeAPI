@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const guitarsController = require('../controllers/guitarsController');
+const authController = require('../controllers/authController');
 
 // router.param('id', guitarsController.checkID); // middleware
 // router.param('body', guitarsController.checkBody);
@@ -19,7 +20,7 @@ router
 
 router
   .route('/')
-  .get(guitarsController.getAllGuitars)
+  .get(authController.protect, guitarsController.getAllGuitars)
   .post(guitarsController.createGuitar);
 
 router
