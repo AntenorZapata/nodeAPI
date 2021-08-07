@@ -63,7 +63,7 @@ const protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  jwt.verify(token, process.env.JWT_SECRET)
+  jwt.verify(token, process.env.JWT_SECRET);
   next();
 });
 
