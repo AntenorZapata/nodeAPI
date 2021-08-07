@@ -27,6 +27,10 @@ router
   .route('/:id')
   .get(guitarsController.getGuitar)
   .patch(guitarsController.upDateGuitar)
-  .delete(guitarsController.deleteGuitar);
+  .delete(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-moderator'),
+    guitarsController.deleteGuitar
+  );
 
 module.exports = router;
