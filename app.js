@@ -12,23 +12,35 @@ const globalError = require('./controllers/errorController');
 
 const app = express();
 
+// Set secure HTTP headers
 app.use(helmet());
 
+// Development logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+// Limit requests from same API
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
   message: 'Too many request from this IP, please trye again in an hour',
 });
-
 app.use('/api', limiter);
 
-app.use(express.json());
+// Body parser, reading data from body into req.body
+app.use(
+  express.json({
+    limit: '10kb',
+  })
+);
+
+// Data sanitization agains NoSQL injection
+
+// Data sanitization agains XSS
 app.use(express.static(`${__dirname}/public`));
 
+// test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
