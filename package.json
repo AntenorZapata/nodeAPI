@@ -25,7 +25,7 @@
     "nodemon": "^2.0.12",
     "slugify": "^1.6.0",
     "validator": "^13.6.0",
-    "xss": "^1.0.9"
+    "xss-clean": "^0.1.1"
   },
   "devDependencies": {
     "eslint": "^7.31.0",

@@ -2,6 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xssClean = require('xss-clean');
 const AppError = require('./utils/appError');
 
 const guitarRouter = require('./routes/guitarRoutes');
@@ -36,8 +38,11 @@ app.use(
 );
 
 // Data sanitization agains NoSQL injection
+app.use(mongoSanitize());
 
 // Data sanitization agains XSS
+app.use(xssClean());
+
 app.use(express.static(`${__dirname}/public`));
 
 // test middleware
