@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 const AppError = require('./utils/appError');
 
 const guitarRouter = require('./routes/guitarRoutes');
@@ -10,6 +11,8 @@ const globalError = require('./controllers/errorController');
 // Middlewares
 
 const app = express();
+
+app.use(helmet());
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
