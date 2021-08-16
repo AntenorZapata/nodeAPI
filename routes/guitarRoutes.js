@@ -3,10 +3,13 @@ const express = require('express');
 const router = express.Router();
 const guitarsController = require('../controllers/guitarsController');
 const authController = require('../controllers/authController');
-const reviewController = require('../controllers/reviewController');
+// const reviewController = require('../controllers/reviewController');
+const reviewRouter = require('./reviewRoutes');
 
 // router.param('id', guitarsController.checkID); // middleware
 // router.param('body', guitarsController.checkBody);
+
+router.use('/:guitarId/reviews', reviewRouter);
 
 router.route('/guitar-stats').get(guitarsController.getGuitarStats);
 // router.route('/monthly-plan/:year').get(guitarsController.getMonthlyPlan);
@@ -34,12 +37,12 @@ router
     guitarsController.deleteGuitar
   );
 
-router
-  .route('/:guitarId/reviews')
-  .post(
-    authController.protect,
-    authController.restrictTo('user'),
-    reviewController.createReview
-  );
+// router
+//   .route('/:guitarId/reviews')
+//   .post(
+//     authController.protect,
+//     authController.restrictTo('user'),
+//     reviewController.createReview
+//   );
 
 module.exports = router;
