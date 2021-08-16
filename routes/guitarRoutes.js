@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const guitarsController = require('../controllers/guitarsController');
 const authController = require('../controllers/authController');
+const reviewController = require('../controllers/reviewController');
 
 // router.param('id', guitarsController.checkID); // middleware
 // router.param('body', guitarsController.checkBody);
@@ -31,6 +32,14 @@ router
     authController.protect,
     authController.restrictTo('admin', 'lead-moderator'),
     guitarsController.deleteGuitar
+  );
+
+router
+  .route('/:guitarId/reviews')
+  .post(
+    authController.protect,
+    authController.restrictTo('user'),
+    reviewController.createReview
   );
 
 module.exports = router;
