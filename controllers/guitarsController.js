@@ -39,7 +39,7 @@ const getAllGuitars = catchAsync(async (req, res, next) => {
 });
 
 const getGuitar = catchAsync(async (req, res, next) => {
-  const guitar = await Guitar.findById(req.params.id);
+  const guitar = await Guitar.findById(req.params.id).populate('reviews');
 
   if (!guitar) {
     return next(new AppError('No guitar found with that ID', 404));

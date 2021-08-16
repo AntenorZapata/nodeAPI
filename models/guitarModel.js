@@ -78,6 +78,13 @@ const guitarSchema = new mongoose.Schema(
   }
 );
 
+// VIrtual populate
+guitarSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'guitar',
+  localField: '_id',
+});
+
 guitarSchema.pre('save', function (next) {
   this.slug = slugfy(this.name, { lower: true });
   next();
