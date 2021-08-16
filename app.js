@@ -9,6 +9,7 @@ const AppError = require('./utils/appError');
 
 const guitarRouter = require('./routes/guitarRoutes');
 const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 const globalError = require('./controllers/errorController');
 
 // Middlewares
@@ -57,6 +58,7 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/guitars', guitarRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
