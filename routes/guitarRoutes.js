@@ -37,12 +37,4 @@ router
     guitarsController.deleteGuitar
   );
 
-// router
-//   .route('/:guitarId/reviews')
-//   .post(
-//     authController.protect,
-//     authController.restrictTo('user'),
-//     reviewController.createReview
-//   );
-
 module.exports = router;

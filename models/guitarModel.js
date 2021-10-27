@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const slugfy = require('slugify');
+// const slugfy = require('slugify');
 
 const guitarSchema = new mongoose.Schema(
   {
@@ -26,10 +26,6 @@ const guitarSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    location: {
-      type: String,
-      required: [true, 'A guitar must have a location'],
-    },
     summary: {
       type: String,
       required: [true, 'A guitar must have a summary'],
@@ -43,19 +39,12 @@ const guitarSchema = new mongoose.Schema(
       required: [true, 'A guitar must have a player'],
     },
     songs: {
-      type: String,
+      type: [String],
       required: [true, 'A guitar must have a song'],
     },
     price: {
       type: Number,
       required: [true, 'A guitar must have a price'],
-    },
-    priceDiscount: {
-      type: Number,
-      validate: function (val) {
-        return val < this.price;
-      },
-      message: 'Discount price ({VALUE}) should be bellow regular price',
     },
     imageCover: {
       type: String,
@@ -70,7 +59,6 @@ const guitarSchema = new mongoose.Schema(
       type: String,
       required: [true, 'A guitar must have a link'],
     },
-    slug: String,
   },
   {
     toJSON: { virtuals: true },
@@ -85,10 +73,10 @@ guitarSchema.virtual('reviews', {
   localField: '_id',
 });
 
-guitarSchema.pre('save', function (next) {
-  this.slug = slugfy(this.name, { lower: true });
-  next();
-});
+// guitarSchema.pre('save', function (next) {
+//   this.slug = slugfy(this.name, { lower: true });
+//   next();
+// });
 
 const Guitar = mongoose.model('Guitar', guitarSchema);
 

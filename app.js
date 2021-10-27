@@ -45,16 +45,7 @@ app.use(mongoSanitize());
 // Data sanitization agains XSS
 app.use(xssClean());
 
-// Prevent parameter polution
-// app.use(hpp());
-
 app.use(express.static(`${__dirname}/public`));
-
-// test middleware
-app.use((req, res, next) => {
-  req.requestTime = new Date().toISOString();
-  next();
-});
 
 app.use('/api/v1/guitars', guitarRouter);
 app.use('/api/v1/users', userRouter);
